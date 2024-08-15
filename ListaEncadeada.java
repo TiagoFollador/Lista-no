@@ -38,9 +38,11 @@ public class ListaEncadeada {
     //Imprimindo elementos 
     public void imprime(){
         Node atual = Lista;
+        int posicao = 0;
     while (atual != null) {
-            System.out.print(atual.getInformacao()+ " -> ");
+            System.out.printf("Nó [%d]: " + atual.getInformacao() + " -> ", posicao);
             atual= atual.getProximo();
+            posicao++;
         }
         System.out.println("Acabou");
 
@@ -48,39 +50,45 @@ public class ListaEncadeada {
     }
     //removendo elementos
     public void remove(int index){
-        Node anterior = Lista;
-        Node atual = anterior.getProximo();
-        int position = 1;
-        boolean find = false;
-        do {
-            if (position == index) {
-                if (index != 0) {
-                    if (atual.getProximo() != null) {
-                        anterior.setProximo(atual.getProximo());
-                        find = true;
-                    } else if (atual.getProximo() == null) {
-                        anterior.setProximo(null);
-                        find = true;
+        try {
+            Node anterior = Lista;
+            Node atual = anterior.getProximo();
+            int position = 1;
+            boolean find = false;
+
+            do {
+                if (position == index) {
+                    if (index != 0) {
+                        if (atual.getProximo() != null) {
+                            anterior.setProximo(atual.getProximo());
+                            find = true;
+                        } else if (atual.getProximo() == null) {
+                            anterior.setProximo(null);
+                            find = true;
+                        }
                     }
+
+                }
+                if (index == 0) {
+                    Lista = atual;
+                    find = true;
                 }
 
-            }
-            if (index == 0){
-                Lista = atual;
-                find = true;
-            }
+                position++;
+                if (!find) {
+                    anterior = atual;
 
-            position++;
-            if (!find) {
-                anterior = atual;
+                    atual = atual.getProximo();
+                }
+            } while (!find);
+        } catch (Exception e){
+            System.out.println(e);
+        }
 
-                atual = atual.getProximo();
-            }
-        } while (!find);
     }
 
     public static void showOpcoes(){
-        System.out.print("[1] - Iserir \n[2] - Excluir \n[0] - Pare \n>>> ");
+        System.out.print("[1] - Inserir \n[2] - Excluir \n[3] - Mostrar Lista \n[0] - Pare \n>>> ");
     }
 
 
@@ -116,6 +124,7 @@ public class ListaEncadeada {
             case 1:
                 item = scanner.nextInt();
                 lista.inserir(item);
+                lista.imprime();
                 break;
             case 2:
                 item = scanner.nextInt();
@@ -126,7 +135,7 @@ public class ListaEncadeada {
     }
 
     public boolean chooseOption(ListaEncadeada lista){
-        int choose = choose(0,2);
+        int choose = choose(0,3);
         switch (choose){
             case 0:
                 return sair();
@@ -135,6 +144,9 @@ public class ListaEncadeada {
                 return true;
             case 2:
                 selectedOption(choose,lista);
+                return true;
+            case 3:
+                lista.imprime();
                 return true;
         }
         return true;
@@ -147,8 +159,6 @@ public class ListaEncadeada {
     public static void main(String[] args) {
         ListaEncadeada lista = new ListaEncadeada();
         boolean keepAssking= true;
-
-        System.out.println("Digite os itens da lista (digite '0' para parar):");
         do {
             lista.showOpcoes();
             keepAssking= lista.chooseOption(lista);
